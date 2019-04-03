@@ -33,6 +33,13 @@ class Database {
             .value();
     }
 
+    public findByCode(code) {
+        return this.database
+            .get("products")
+            .find({ code })
+            .value();
+    }
+
     public create(data) {
         data.id = uuidv4();
 
