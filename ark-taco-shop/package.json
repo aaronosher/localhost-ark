@@ -13,36 +13,32 @@
         "dist"
     ],
     "scripts": {
-        "start": "yarn compile && node ./bin/www",
-        "build": "yarn compile",
-        "compile": "./node_modules/typescript/bin/tsc",
-        "dev": "cross-env DEBUG=ark-taco-shop:* nodemon bin/www",
-        "format": "./node_modules/tslint/bin/tslint -c ./tslint.json 'src/**/*.ts' --fix && prettier --write \"./*.{ts,js,json,md}\" \"./src/**/*.{ts,js,json,md}\""
+        "compile": "tsc",
+        "build": "yarn clean && yarn compile",
+        "build:watch": "yarn clean && yarn compile -w",
+        "clean": "del dist",
+        "format": "tslint -c ./tslint.json 'src/**/*.ts' --fix && prettier --write \"./*.{ts,js,json,md}\" \"./src/**/*.{ts,js,json,md}\""
     },
     "dependencies": {
         "@arkecosystem/client": "^0.1.20",
-        "@arkecosystem/crypto": "^2.1.1",
-        "cookie-parser": "~1.4.3",
-        "debug": "~2.6.9",
-        "express": "~4.16.0",
-        "http-errors": "~1.6.2",
-        "http-proxy-middleware": "^0.19.0",
-        "morgan": "~1.9.0",
-        "nodemon": "^1.18.10"
+        "@arkecosystem/core-container": "^2.3.0-next.4",
+        "@arkecosystem/core-interfaces": "^2.3.0-next.4",
+        "@arkecosystem/crypto": "^2.3.0-next.4",
+        "h2o2": "^8.1.2",
+        "handlebars": "^4.1.1",
+        "hapi": "^18.1.0",
+        "joi": "^14.3.1",
+        "vision": "^5.4.4"
     },
     "devDependencies": {
-        "@arkecosystem/core-interfaces": "^2.2.1",
-        "@sindresorhus/tsconfig": "^0.2.1",
-        "@types/express": "^4.16.1",
-        "@types/http-proxy-middleware": "^0.19.2",
-        "@types/node": "^11.10.5",
+        "@sindresorhus/tsconfig": "^0.3.0",
+        "@types/node": "^11.13.0",
         "cross-env": "^5.2.0",
-        "jest": "^23.1.0",
-        "jest-extended": "^0.7.2",
+        "jest": "^24.7.0",
+        "jest-extended": "^0.11.1",
         "prettier": "^1.16.4",
-        "tslint": "^5.14.0",
+        "tslint": "^5.15.0",
         "tslint-config-prettier": "^1.18.0",
-        "typescript": "^3.3.3333",
-        "winston": "^3.1.0"
+        "typescript": "^3.4.1"
     }
 }

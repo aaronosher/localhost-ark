@@ -1,65 +1,76 @@
-import express, { NextFunction, Request, Response } from "express";
-import createError from "http-errors";
-import proxy from "http-proxy-middleware";
-import path from "path";
-import { buildTacoApiClient, TacoApiOptions } from "./services/buildTacoApiClient";
+import { createServer, mountServer } from "@arkecosystem/core-http-utils";
+import h2o2 from "h2o2";
+import Handlebars from "handlebars";
+import Joi from "joi";
+import Vision from "vision";
+import { buildTacoApiClient } from "./build-taco-api-client";
+import { ProductParams, ServerOptions, TacoApiOptions } from "./interfaces";
 
-export { TacoApiOptions } from "./services/buildTacoApiClient";
+export async function startServer(optsServer: ServerOptions, optsClient: TacoApiOptions) {
+    const server = await createServer({ host: optsServer.host, port: optsServer.port });
 
-export function buildApp(tacoApiConfig: TacoApiOptions) {
-    const app = express();
+    await server.register(h2o2);
+    await server.register(Vision);
 
-    /*
-     * Proxy calls to ark-taco-shop-api
-     * PS: This needs to be set before other middlewares that modify the request
-     */
-    const target = tacoApiConfig.uri;
-    app.use("/api/taco", proxy({ target, changeOrigin: true }));
-
-    app.use(express.json());
-    app.use(express.static(path.join(__dirname, "..", "public")));
-
-    app.post("/api/orders", async (req: Request, res: Response) => {
-        try {
-            const tacoApiClient = buildTacoApiClient(tacoApiConfig);
-            const transaction = await tacoApiClient.postTransaction(req.body);
-            res.json({ data: transaction });
-        } catch (error) {
-            res.status(400).json({ error: error.message });
-        }
+    server.views({
+        engines: {
+            html: Handlebars,
+        },
+        relativeTo: __dirname,
+        path: "../public",
     });
 
-    app.get("/api/orders", async (req: Request, res: Response) => {
-        try {
-            const tacoApiClient = buildTacoApiClient(tacoApiConfig);
-            const results = await tacoApiClient.listTransactions();
-            res.json({ results });
-        } catch (error) {
-            res.status(400).json({ error: error.message });
-        }
+    // @TODO: proxy calls to ark-taco-shop-api
+    // app.use("/api/taco", proxy({ target: tacoApiConfig.uri, changeOrigin: true }));
+
+    server.route({
+        method: "GET",
+        path: "/",
+        async handler(_, h) {
+            return h.view("index");
+        },
     });
 
-    app.get("/orders", (req: Request, res: Response) => {
-        res.sendFile(path.join(__dirname, "..", "/public/orders.html"));
+    server.route({
+        method: "GET",
+        path: "/orders",
+        async handler(_, h) {
+            return h.view("orders");
+        },
     });
 
-    app.get("/", (req, res) => {
-        res.sendFile(path.join(__dirname, "..", "/public/index.html"));
+    server.route({
+        method: "GET",
+        path: "/api/orders",
+        async handler() {
+            return {
+                results: await buildTacoApiClient(optsClient).listTransactions(),
+            };
+        },
     });
 
-    // catch 404 and forward to error handler
-    app.use((req: Request, res: Response, next: NextFunction) => {
-        next(createError(404));
+    server.route({
+        method: "POST",
+        path: "/api/orders",
+        async handler(request) {
+            const payload: ProductParams = request.payload as ProductParams;
+
+            return {
+                data: await buildTacoApiClient(optsClient).postTransaction({
+                    id: payload.id,
+                    price: payload.price,
+                }),
+            };
+        },
+        options: {
+            validate: {
+                payload: {
+                    id: Joi.number(),
+                    price: Joi.number(),
+                },
+            },
+        },
     });
 
-    // error handler
-    app.use((err: any, req: Request, res: Response, next) => {
-        console.error(err.message);
-
-        // render the error page
-        res.status(err.status || 500);
-        res.send("Internal Server Error!");
-    });
-
-    return app;
+    return mountServer("Ark Taco API", server);
 }
