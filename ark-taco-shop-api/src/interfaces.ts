@@ -17,3 +17,14 @@ export interface PartialProductAttributes {
     price?: number;
     quantity?: number;
 }
+
+export interface ServerOptions {
+    enabled: boolean;
+    host: string;
+    port: number;
+}
+
+export interface PluginOptions {
+    enabled: boolean;
+    server: ServerOptions;
+}

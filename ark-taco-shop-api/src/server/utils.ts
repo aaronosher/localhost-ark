@@ -1,4 +1,3 @@
-"use strict";
 import { Request } from "hapi";
 
 export interface PaginatedResults<T> {

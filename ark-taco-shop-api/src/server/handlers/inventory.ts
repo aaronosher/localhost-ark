@@ -1,19 +1,16 @@
 "use strict";
 
 import { Request, ResponseToolkit } from "hapi";
-
 import { database } from "../../database";
-import { ProductAttributes, ProductInstance } from "../../database/models/product";
+import { ProductAttributes } from "../../interfaces";
 import * as schema from "../schema";
 import * as utils from "../utils";
 
-function getFindOrCreateCallback(upsertProduct: ProductAttributes, callback: (product: ProductInstance) => any) {
-    return async function findOrCreateCallback(persistedProduct: ProductInstance, created: boolean) {
-        const { Product } = database;
-
+function getFindOrCreateCallback(upsertProduct: ProductAttributes, callback: (product: ProductAttributes) => any) {
+    return async function findOrCreateCallback(persistedProduct: ProductAttributes, created: boolean) {
         if (!created) {
             const total = persistedProduct.quantity + upsertProduct.quantity;
-            const product = await Product.findByPk(persistedProduct.id);
+            const product = await database.findById(persistedProduct.id);
 
             const result = await product.update({
                 quantity: total,
@@ -25,14 +22,14 @@ function getFindOrCreateCallback(upsertProduct: ProductAttributes, callback: (pr
     };
 }
 
-function getFindOrCreatePromise(upsertProduct: ProductAttributes): Promise<ProductInstance> {
+function getFindOrCreatePromise(upsertProduct: ProductAttributes): Promise<ProductAttributes> {
     return new Promise(resolve => {
-        const { Product } = database;
-
-        return Product.findOrCreate({
-            where: { code: upsertProduct.code },
-            defaults: upsertProduct,
-        }).spread(getFindOrCreateCallback(upsertProduct, resolve));
+        return database
+            .findOrCreate({
+                where: { code: upsertProduct.code },
+                defaults: upsertProduct,
+            })
+            .spread(getFindOrCreateCallback(upsertProduct, resolve));
     });
 }
 

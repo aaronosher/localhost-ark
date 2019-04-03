@@ -1,20 +1,15 @@
 "use strict";
 
+import { app } from "@arkecosystem/core-container";
+import { Logger } from "@arkecosystem/core-interfaces";
 import { Server } from "hapi";
 import path from "path";
-
-import { AppContext } from "../AppContext";
-import routes from "./routes";
-
-export interface ServerOptions {
-    enabled: boolean;
-    host: string;
-    port: number;
-}
+import { ServerOptions } from "../interfaces";
+import * as inventoryHandlers from "./handlers/inventory";
+import * as productsHandlers from "./handlers/products";
+import * as transactionsHandler from "./handlers/transactions";
 
 export async function startServer(options: ServerOptions): Promise<Server> {
-    const { logger } = AppContext;
-
     const baseConfig = {
         host: options.host,
         port: options.port,
@@ -29,11 +24,47 @@ export async function startServer(options: ServerOptions): Promise<Server> {
     };
 
     const server = new Server(baseConfig);
-    await server.register({ plugin: require("h2o2") });
+    await server.register(require("h2o2"));
     await server.register(require("inert"));
 
     await server.register({
-        plugin: routes,
+        plugin: {
+            name: "inventory-api",
+            version: "0.1.0",
+            async register(server: Server) {
+                server.route([
+                    {
+                        method: "GET",
+                        path: "/taco/products",
+                        ...productsHandlers.index,
+                    },
+                    {
+                        method: "POST",
+                        path: "/taco/inventory",
+                        ...inventoryHandlers.create,
+                    },
+                    {
+                        method: "POST",
+                        // transaction's creation needs to be intercepted
+                        path: "/transactions",
+                        ...transactionsHandler,
+                    },
+                    {
+                        method: "*",
+                        // all the other calls to the core-api can be proxied directly
+                        path: "/{path*}",
+                        handler: {
+                            proxy: {
+                                protocol: "http",
+                                host: app.resolveOptions("api").host,
+                                port: app.resolveOptions("api").port,
+                                passThrough: true,
+                            },
+                        },
+                    },
+                ]);
+            },
+        },
         routes: { prefix: "/api" },
         options,
     });
@@ -63,7 +94,9 @@ export async function startServer(options: ServerOptions): Promise<Server> {
 
     await server.start();
 
-    logger.info(`🌮 ark-taco-shop-api available and listening on ${server.info.uri}`);
+    app.resolvePlugin<Logger.ILogger>("logger").info(
+        `🌮 ark-taco-shop-api available and listening on ${server.info.uri}`,
+    );
 
     return server;
 }

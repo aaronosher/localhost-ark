@@ -1,9 +1,8 @@
 "use strict";
 
+import { app } from "@arkecosystem/core-container";
+import { Logger } from "@arkecosystem/core-interfaces";
 import { Request, ResponseToolkit } from "hapi";
-import Wreck from "wreck";
-
-import { AppContext } from "../../AppContext";
 import { database } from "../../database";
 import { RequestOptions } from "../../types/wreck";
 
@@ -12,11 +11,7 @@ interface OrderAttributes {
 }
 
 function getCoreApiUri(path: string, search: string): string {
-    const {
-        config: {
-            coreApi: { host, port },
-        },
-    } = AppContext;
+    const { host, port } = app.resolveOptions("api");
 
     return `http://${host}:${port}${path || ""}${search || ""}`;
 }
@@ -48,13 +43,10 @@ function getOrderFromTransaction(payload: OrderAttributes[] = []): OrderAttribut
 /* Intercepts Ark's transactions proxied call to verify if product has balance */
 export const transactions = {
     async handler(request: Request, h: ResponseToolkit): Promise<object> {
-        const { logger } = AppContext;
-        const { Product } = database;
-
         try {
             const { productId } = getOrderFromTransaction(request.payload as OrderAttributes[]);
 
-            const product = await Product.findByPk(productId);
+            const product = await database.findById(productId);
 
             /* If there is not enough balance, we don't create a transaction */
             if (!product || !product.quantity) {
@@ -66,7 +58,7 @@ export const transactions = {
             const res = await proxyToTransactionCreation(request);
             return h.response(res).code(res.statusCode);
         } catch (error) {
-            logger.error(error.message);
+            app.resolvePlugin<Logger.ILogger>("logger").error(error.message);
             return h.response({ error }).code(400);
         }
     },
