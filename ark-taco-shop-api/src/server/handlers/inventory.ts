@@ -11,9 +11,11 @@ export const create = {
         const productsToUpsert = (request.payload as ProductAttributes[]) || [];
 
         const products = await Promise.all(
-            productsToUpsert.map(
-                (product: ProductAttributes) => database.findByCode(product.code) || database.create(product),
-            ),
+            productsToUpsert.map((product: ProductAttributes) => {
+                const model = database.findByCode(product.code);
+
+                return model ? database.update(model.id, product) : database.create(product);
+            }),
         );
 
         return h.response(utils.respondWithCollection(products)).code(201);
