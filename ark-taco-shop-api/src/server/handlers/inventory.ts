@@ -6,7 +6,7 @@ import { ProductAttributes } from "../../interfaces";
 import * as schema from "../schema";
 import * as utils from "../utils";
 
-export const create = {
+export const inventoryHandler = {
     async handler(request: Request, h: ResponseToolkit) {
         const productsToUpsert = (request.payload as ProductAttributes[]) || [];
 

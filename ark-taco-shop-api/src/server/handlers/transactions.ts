@@ -3,6 +3,7 @@
 import { app } from "@arkecosystem/core-container";
 import { Logger } from "@arkecosystem/core-interfaces";
 import { Request, ResponseToolkit } from "hapi";
+import Wreck from "wreck";
 import { database } from "../../database";
 import { RequestOptions } from "../../types/wreck";
 
@@ -20,6 +21,7 @@ function getProxyOptions(request: Request): RequestOptions {
     const options = { headers: {}, payload: request.payload };
     options.headers = Object.assign({}, request.headers);
 
+    // @ts-ignore
     delete options.headers.host;
     delete options.headers["content-length"];
 
@@ -36,12 +38,13 @@ function proxyToTransactionCreation(request: Request): Promise<any> {
 }
 
 function getOrderFromTransaction(payload: OrderAttributes[] = []): OrderAttributes {
+    // @ts-ignore
     const [transaction = { vendorField: "{}" }] = payload.transactions || [];
     return JSON.parse(transaction.vendorField) || {};
 }
 
 /* Intercepts Ark's transactions proxied call to verify if product has balance */
-export const transactions = {
+export const transactionsHandler = {
     async handler(request: Request, h: ResponseToolkit): Promise<object> {
         try {
             const { productId } = getOrderFromTransaction(request.payload as OrderAttributes[]);

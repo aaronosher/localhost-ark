@@ -13,7 +13,6 @@
         "dist"
     ],
     "scripts": {
-        "start": "tsc && node ./bin/www",
         "compile": "tsc",
         "build": "yarn clean && yarn build:prepare && yarn compile && yarn build:assets",
         "build:assets": "cp -rf ./src/server/public ./dist/server/",
