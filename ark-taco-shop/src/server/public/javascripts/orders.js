@@ -1,5 +1,5 @@
 $(document).ready(
-    (function() {
+    (function () {
         const orderTemplate = _.template(`
   <tr>
     <th scope="row"><%= id %></th>
@@ -27,22 +27,27 @@ $(document).ready(
             }
 
             _.sortBy(orders, sortBy).forEach(function renderOrders(order) {
-                const { name } = products.find(function(product) {
-                    return product.id == order.vendorField.productId;
+                const {
+                    name
+                } = products.find(function (product) {
+                    return product.id == order.vendorField.id;
                 });
-                const orderMarkup = orderTemplate({ ...order, name });
+                const orderMarkup = orderTemplate({
+                    ...order,
+                    name
+                });
                 $ordersContainer.append($(orderMarkup));
             });
         }
 
         function loadOrders() {
             Api.getOrders()
-                .then(function(fetchedOrders) {
-                    Api.getProducts().then(function(fetchedProducts) {
+                .then(function (fetchedOrders) {
+                    Api.getProducts().then(function (fetchedProducts) {
                         renderOrders(fetchedOrders, fetchedProducts);
                     });
                 })
-                .catch(function(error) {
+                .catch(function (error) {
                     Alerts.showError(error, "alert-error");
                     updateOrdersContainer('<div class="text-center">Sorry, try again later!</span>');
                 });
