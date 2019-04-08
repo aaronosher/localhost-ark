@@ -27,7 +27,7 @@ export const plugin = {
             );
         }
 
-        startServer(options.server, options.inventoryApi);
+        return startServer(options.server, options.inventoryApi);
     },
     async deregister(container: Container.IContainer, options: PluginOptions) {
         if (options.enabled && container.has("ark-taco-shop")) {

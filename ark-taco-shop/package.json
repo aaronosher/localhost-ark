@@ -14,8 +14,10 @@
     ],
     "scripts": {
         "compile": "tsc",
-        "build": "yarn clean && yarn compile",
-        "build:watch": "yarn clean && yarn compile -w",
+        "build": "yarn clean && yarn build:prepare && yarn compile && yarn build:assets",
+        "build:assets": "cp -rf ./src/server/public ./dist/server/",
+        "build:prepare": "mkdir dist",
+        "build:watch": "yarn clean && yarn build && yarn compile -w",
         "clean": "del dist",
         "format": "tslint -c ./tslint.json 'src/**/*.ts' --fix && prettier --write \"./*.{ts,js,json,md}\" \"./src/**/*.{ts,js,json,md}\""
     },
