@@ -1,5 +1,5 @@
 $(document).ready(
-    (function() {
+    (function () {
         const productTemplate = _.template(`<div class="card">
     <img class="card-img-top" src="<%= imageUrl %>" alt="<%= name %>" height="180">
     <div class="card-body">
@@ -32,7 +32,7 @@ $(document).ready(
         function renderProducts(products, onBuyProduct, sortBy = "name") {
             $productsContainer.html("");
 
-            const availableProducts = products.filter(function(product) {
+            const availableProducts = products.filter(function (product) {
                 return product.quantity > 0;
             });
 
@@ -48,18 +48,20 @@ $(document).ready(
 
         function loadProducts() {
             Api.getProducts()
-                .then(function(fetchedProducts) {
+                .then(function (fetchedProducts) {
                     renderProducts(fetchedProducts, buyProduct);
                 })
-                .catch(function(error) {
+                .catch(function (error) {
                     Alerts.showError(error, "alert-error");
                     updateProductsContainer('<div class="text-center">Sorry, try again later!</span>');
                 });
         }
 
         function buyProduct(product) {
-            const order = { productId: product.id, price: product.price };
-            Api.createOrder(order).then(function(transaction) {
+            Api.createOrder({
+                id: product.id,
+                price: product.price
+            }).then(function (transaction) {
                 const message = `Thank you for your purchase! Transaction number: ${transaction.id}`;
                 Alerts.showSuccess(message, "alert-success");
                 loadProducts();

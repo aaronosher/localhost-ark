@@ -34,22 +34,22 @@ function proxyToTransactionCreation(request: Request): Promise<any> {
     const uri = getCoreApiUri(path, search);
     const options = getProxyOptions(request);
 
-    return Wreck.request(request.method, uri, options);
+    return Wreck.request(request.method, `${uri}/api/v2/transactions`, options);
 }
 
 function getOrderFromTransaction(payload: OrderAttributes[] = []): OrderAttributes {
     // @ts-ignore
-    const [transaction = { vendorField: "{}" }] = payload.transactions || [];
-    return JSON.parse(transaction.vendorField) || {};
+    return JSON.parse(payload.transactions[0].vendorField);
 }
 
 /* Intercepts Ark's transactions proxied call to verify if product has balance */
 export const transactionsHandler = {
     async handler(request: Request, h: ResponseToolkit): Promise<object> {
         try {
-            const { productId } = getOrderFromTransaction(request.payload as OrderAttributes[]);
-
-            const product = await database.findById(productId);
+            const order = getOrderFromTransaction(request.payload as OrderAttributes[]);
+            // @ts-ignore
+            const product = await database.findById(order.id);
+            console.log(product);
 
             /* If there is not enough balance, we don't create a transaction */
             if (!product || !product.quantity) {
@@ -57,7 +57,7 @@ export const transactionsHandler = {
             }
 
             /* If there is enough balance, we update product's balance and create a transaction */
-            await product.update({ quantity: product.quantity - 1 });
+            await database.update(product.id, { quantity: product.quantity - 1 });
             const res = await proxyToTransactionCreation(request);
             return h.response(res).code(res.statusCode);
         } catch (error) {

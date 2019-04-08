@@ -71,18 +71,25 @@ export async function startServer(optsServer: ServerOptions, optsClient: TacoApi
         async handler(request) {
             const payload: ProductParams = request.payload as ProductParams;
 
-            return {
-                data: await buildTacoApiClient(optsClient).postTransaction({
-                    id: payload.id,
-                    price: payload.price,
-                }),
-            };
+            try {
+                return {
+                    data: await buildTacoApiClient(optsClient).postTransaction({
+                        id: payload.id,
+                        price: payload.price,
+                    }),
+                };
+            } catch (error) {
+                console.log(error);
+
+                return error;
+            }
         },
         options: {
             validate: {
                 payload: {
-                    id: Joi.number(),
+                    id: Joi.string(),
                     price: Joi.number(),
+                    ts: Joi.number(),
                 },
             },
         },
