@@ -49,7 +49,6 @@ export const transactionsHandler = {
             const order = getOrderFromTransaction(request.payload as OrderAttributes[]);
             // @ts-ignore
             const product = await database.findById(order.id);
-            console.log(product);
 
             /* If there is not enough balance, we don't create a transaction */
             if (!product || !product.quantity) {
