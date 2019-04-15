@@ -67,7 +67,7 @@ mv ./localhost-ark/ark-taco-shop-api ./
 
 ##### Configuration
 
-We will be using `testnet` as a local network to run ARK. To configure it, modify the file `core/packages/core/bin/config/testnet/plugins.js` and copy the contents of the configuration object from the file `localhost-ark/ark-taco-shop-api/lib/defaults.js`, and append it to the `plugins.js` file, like showed below:
+We will be using `testnet` as a local network to run ARK. To configure it, modify the file `core/packages/core/bin/config/testnet/plugins.js` and copy the contents of the configuration object from the file `localhost-ark/ark-taco-shop-api/src/defaults.ts`, and append it to the `plugins.js` file, like showed below:
 
 ```js
 {
@@ -139,7 +139,7 @@ mv ./localhost-ark/ark-taco-shop ./
 
 ##### Configuration
 
-We will be using `testnet` as a local network to run ARK. To configure it, modify the file `core/packages/core/lib/config/testnet/plugins.js` and copy the configuration object from of the file `localhost-ark/ark-taco-shop/lib/defaults.js`, and add it like showed below:
+We will be using `testnet` as a local network to run ARK. To configure it, modify the file `core/packages/core/lib/config/testnet/plugins.js` and copy the configuration object from of the file `localhost-ark/ark-taco-shop/src/defaults.ts`, and add it like showed below:
 
 ```js
 {
