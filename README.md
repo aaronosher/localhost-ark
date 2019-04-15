@@ -18,6 +18,8 @@ To begin, create a root folder to contain the ark core and the ark-taco-shop com
 cd ~
 git clone git@github.com:ArkEcosystem/core.git
 cd core
+git fetch https://github.com/arkecosystem/core develop:develop
+git checkout develop
 yarn setup
 yarn docker ark
 ```
@@ -75,19 +77,11 @@ We will be using `testnet` as a local network to run ARK. To configure it, modif
   },
   '@mlh/ark-taco-shop-api': {
     enabled: process.env.ARK_INVENTORY_API_ENABLED || true,
-    database: {
-      dialect: 'postgres',
-      host: process.env.ARK_INVENTORY_API_DATABASE_HOST || 'localhost',
-      port: process.env.ARK_INVENTORY_API_DATABASE_PORT || 5432,
-      username: process.env.ARK_INVENTORY_API_DATABASE_USER || 'ark',
-      password: process.env.ARK_INVENTORY_API_DATABASE_PASSWORD || 'password',
-      database: process.env.ARK_INVENTORY_API_DATABASE_NAME || 'ark_testnet'
-    },
     server: {
-      enabled: process.env.ARK_INVENTORY_API_SERVER_ENABLED || true,
-      host: process.env.ARK_INVENTORY_API_SERVER_HOST || '0.0.0.0',
-      port: process.env.ARK_INVENTORY_API_SERVER_PORT || 5000
-    }
+        enabled: process.env.ARK_INVENTORY_API_SERVER_ENABLED || true,
+        host: process.env.ARK_INVENTORY_API_SERVER_HOST || "0.0.0.0",
+        port: process.env.ARK_INVENTORY_API_SERVER_PORT || 5000,
+    },
   }
 }
 ```
@@ -156,17 +150,18 @@ We will be using `testnet` as a local network to run ARK. To configure it, modif
   '@mlh/ark-taco-shop': {
     enabled: process.env.ARK_TACO_SHOP_ENABLED || true,
     server: {
-      enabled: process.env.ARK_TACO_SHOP_SERVER_ENABLED || true,
-      host: process.env.ARK_TACO_SHOP_SERVER_HOST || '0.0.0.0',
-      port: process.env.ARK_TACO_SHOP_SERVER_PORT || 3000
+        enabled: process.env.ARK_TACO_SHOP_SERVER_ENABLED || true,
+        host: process.env.ARK_TACO_SHOP_SERVER_HOST || "0.0.0.0",
+        port: process.env.ARK_TACO_SHOP_SERVER_PORT || 3000,
     },
     inventoryApi: {
-      sender: process.env.ARK_TACO_SHOP_API_URL || 'AJjv7WztjJNYHrLAeveG5NgHWp6699ZJwD',
-      passphrase: process.env.ARK_TACO_SHOP_API_URL || 'decide rhythm oyster lady they merry betray jelly coyote solve episode   then',
-      recipient: process.env.ARK_TACO_SHOP_API_URL || 'ANBkoGqWeTSiaEVgVzSKZd3jS7UWzv9PSo',
-      uri: process.env.ARK_TACO_SHOP_API_URL || 'http://0.0.0.0:5000'
-    }
-  }
+        sender: process.env.ARK_TACO_SHOP_API_URL || "AJjv7WztjJNYHrLAeveG5NgHWp6699ZJwD",
+        passphrase:
+            process.env.ARK_TACO_SHOP_API_URL ||
+            "decide rhythm oyster lady they merry betray jelly coyote solve episode then",
+        recipient: process.env.ARK_TACO_SHOP_API_URL || "ANBkoGqWeTSiaEVgVzSKZd3jS7UWzv9PSo",
+        uri: process.env.ARK_TACO_SHOP_API_URL || "http://0.0.0.0:5000",
+    },
 }
 ```
 
