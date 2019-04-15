@@ -16,7 +16,7 @@ To begin, create a root folder to contain the ark core and the ark-taco-shop com
 
 ```sh
 cd ~
-git clone git@github.com:ArkEcosystem/core.git
+git clone https://github.com/ArkEcosystem/core.git
 cd core
 git fetch https://github.com/arkecosystem/core develop:develop
 git checkout develop
