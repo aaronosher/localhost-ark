@@ -16,6 +16,7 @@ export async function startServer(optsServer: ServerOptions, optsClient: TacoApi
     await server.register(Vision);
     await server.register(inert);
 
+    // @ts-ignore
     server.views({
         engines: {
             html: Handlebars,
@@ -43,6 +44,7 @@ export async function startServer(optsServer: ServerOptions, optsClient: TacoApi
         method: "GET",
         path: "/",
         async handler(_, h) {
+            // @ts-ignore
             return h.view("index");
         },
     });
@@ -51,6 +53,7 @@ export async function startServer(optsServer: ServerOptions, optsClient: TacoApi
         method: "GET",
         path: "/orders",
         async handler(_, h) {
+            // @ts-ignore
             return h.view("orders");
         },
     });
