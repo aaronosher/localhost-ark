@@ -1,6 +1,6 @@
 "use strict";
 
-import { Request, ResponseToolkit } from "hapi";
+import { Request, ResponseToolkit } from "@hapi/hapi";
 import { database } from "../../database";
 import { ProductAttributes } from "../../interfaces";
 import * as schema from "../schema";

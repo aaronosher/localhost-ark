@@ -1,6 +1,6 @@
 "use strict";
 
-import { Request } from "hapi";
+import { Request } from "@hapi/hapi";
 import { database } from "../../database";
 import { ProductAttributes } from "../../interfaces";
 import * as utils from "../utils";
