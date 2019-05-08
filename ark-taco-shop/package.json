@@ -23,14 +23,14 @@
     },
     "dependencies": {
         "@arkecosystem/client": "^0.1.20",
-        "@arkecosystem/core-container": "^2.3.0",
-        "@arkecosystem/core-interfaces": "^2.3.0",
-        "@arkecosystem/crypto": "^2.3.0",
-        "@hapi/h2o2": "^8.1.2",
-        "@hapi/hapi": "^18.1.0",
-        "@hapi/joi": "^14.3.1",
-        "@hapi/vision": "^5.4.4",
-        "handlebars": "^4.1.1"
+        "@arkecosystem/core-container": "2.4.0-next.3",
+        "@arkecosystem/core-interfaces": "2.4.0-next.3",
+        "@arkecosystem/crypto": "2.4.0-next.3",
+        "@hapi/h2o2": "^8.3.0",
+        "@hapi/hapi": "^18.3.1",
+        "@hapi/joi": "^15.0.1",
+        "@hapi/vision": "^5.5.2",
+        "handlebars": "^4.1.2"
     },
     "devDependencies": {
         "@sindresorhus/tsconfig": "^0.3.0",
@@ -38,14 +38,14 @@
         "@types/hapi__hapi": "^18.2.1",
         "@types/hapi__joi": "^15.0.1",
         "@types/hapi__vision": "^5.5.0",
-        "@types/node": "^11.13.0",
+        "@types/node": "^12.0.0",
         "@types/prettier": "^1.16.3",
         "cross-env": "^5.2.0",
-        "jest": "^24.7.0",
+        "jest": "^24.8.0",
         "jest-extended": "^0.11.1",
-        "prettier": "^1.16.4",
-        "tslint": "^5.15.0",
+        "prettier": "^1.17.0",
+        "tslint": "^5.16.0",
         "tslint-config-prettier": "^1.18.0",
-        "typescript": "^3.4.1"
+        "typescript": "^3.4.5"
     }
 }
