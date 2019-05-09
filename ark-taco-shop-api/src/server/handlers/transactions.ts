@@ -2,8 +2,8 @@
 
 import { app } from "@arkecosystem/core-container";
 import { Logger } from "@arkecosystem/core-interfaces";
-import { Request, ResponseToolkit } from "hapi";
-import Wreck from "wreck";
+import { Request, ResponseToolkit } from "@hapi/hapi";
+import Wreck from "@hapi/wreck";
 import { database } from "../../database";
 import { RequestOptions } from "../../types/wreck";
 

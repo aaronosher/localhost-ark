@@ -2,9 +2,9 @@
 
 import { app } from "@arkecosystem/core-container";
 import { Logger } from "@arkecosystem/core-interfaces";
-import h2o2 from "h2o2";
-import { Server } from "hapi";
-import inert from "inert";
+import h2o2 from "@hapi/h2o2";
+import { Server } from "@hapi/hapi";
+import inert from "@hapi/inert";
 import path from "path";
 import { ServerOptions } from "../interfaces";
 import { inventoryHandler } from "./handlers/inventory";

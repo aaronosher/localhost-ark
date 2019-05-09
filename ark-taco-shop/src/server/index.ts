@@ -1,11 +1,11 @@
 import { createServer, mountServer } from "@arkecosystem/core-http-utils";
-import h2o2 from "h2o2";
+import h2o2 from "@hapi/h2o2";
+import inert from "@hapi/inert";
+import Joi from "@hapi/joi";
+import Vision from "@hapi/vision";
 import Handlebars from "handlebars";
-import inert from "inert";
-import Joi from "joi";
 import path from "path";
 import { URL } from "url";
-import Vision from "vision";
 import { buildTacoApiClient } from "../build-taco-api-client";
 import { ProductParams, ServerOptions, TacoApiOptions } from "../interfaces";
 
@@ -16,6 +16,7 @@ export async function startServer(optsServer: ServerOptions, optsClient: TacoApi
     await server.register(Vision);
     await server.register(inert);
 
+    // @ts-ignore
     server.views({
         engines: {
             html: Handlebars,
@@ -43,6 +44,7 @@ export async function startServer(optsServer: ServerOptions, optsClient: TacoApi
         method: "GET",
         path: "/",
         async handler(_, h) {
+            // @ts-ignore
             return h.view("index");
         },
     });
@@ -51,6 +53,7 @@ export async function startServer(optsServer: ServerOptions, optsClient: TacoApi
         method: "GET",
         path: "/orders",
         async handler(_, h) {
+            // @ts-ignore
             return h.view("orders");
         },
     });

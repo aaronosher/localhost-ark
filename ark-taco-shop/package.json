@@ -1,46 +1,51 @@
 {
     "name": "@mlh/ark-taco-shop",
-    "description": "Provides a Taco Shop UI for Ark Core",
     "version": "0.1.0",
     "private": true,
+    "description": "Provides a Taco Shop UI for Ark Core",
+    "license": "MIT",
     "contributors": [
         "Halisson Bruno <halissonvit@gmail.com>"
     ],
-    "license": "MIT",
-    "main": "dist/index",
-    "types": "dist/index",
     "files": [
         "dist"
     ],
+    "main": "dist/index",
+    "types": "dist/index",
     "scripts": {
-        "compile": "tsc",
         "build": "yarn clean && yarn build:prepare && yarn compile && yarn build:assets",
         "build:assets": "cp -rf ./src/server/public ./dist/server/",
         "build:prepare": "mkdir dist",
         "build:watch": "yarn clean && yarn build && yarn compile -w",
         "clean": "del dist",
+        "compile": "tsc",
         "format": "tslint -c ./tslint.json 'src/**/*.ts' --fix && prettier --write \"./*.{ts,js,json,md}\" \"./src/**/*.{ts,js,json,md}\""
     },
     "dependencies": {
         "@arkecosystem/client": "^0.1.20",
-        "@arkecosystem/core-container": "^2.3.0-next.4",
-        "@arkecosystem/core-interfaces": "^2.3.0-next.4",
-        "@arkecosystem/crypto": "^2.3.0-next.4",
-        "h2o2": "^8.1.2",
-        "handlebars": "^4.1.1",
-        "hapi": "^18.1.0",
-        "joi": "^14.3.1",
-        "vision": "^5.4.4"
+        "@arkecosystem/core-container": "2.4.0-next.3",
+        "@arkecosystem/core-interfaces": "2.4.0-next.3",
+        "@arkecosystem/crypto": "2.4.0-next.3",
+        "@hapi/h2o2": "^8.3.0",
+        "@hapi/hapi": "^18.3.1",
+        "@hapi/joi": "^15.0.1",
+        "@hapi/vision": "^5.5.2",
+        "handlebars": "^4.1.2"
     },
     "devDependencies": {
         "@sindresorhus/tsconfig": "^0.3.0",
-        "@types/node": "^11.13.0",
+        "@types/hapi__h2o2": "^8.3.0",
+        "@types/hapi__hapi": "^18.2.1",
+        "@types/hapi__joi": "^15.0.1",
+        "@types/hapi__vision": "^5.5.0",
+        "@types/node": "^12.0.0",
+        "@types/prettier": "^1.16.3",
         "cross-env": "^5.2.0",
-        "jest": "^24.7.0",
+        "jest": "^24.8.0",
         "jest-extended": "^0.11.1",
-        "prettier": "^1.16.4",
-        "tslint": "^5.15.0",
+        "prettier": "^1.17.0",
+        "tslint": "^5.16.0",
         "tslint-config-prettier": "^1.18.0",
-        "typescript": "^3.4.1"
+        "typescript": "^3.4.5"
     }
 }

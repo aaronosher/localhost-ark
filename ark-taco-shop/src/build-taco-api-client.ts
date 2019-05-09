@@ -1,5 +1,5 @@
 import Client from "@arkecosystem/client";
-import { transactionBuilder } from "@arkecosystem/crypto";
+import { Transactions, Utils } from "@arkecosystem/crypto";
 import { ProductParams, TacoApiOptions } from "./interfaces";
 
 const API_VERSION = 2;
@@ -33,9 +33,9 @@ export function buildTacoApiClient(config: TacoApiOptions) {
             const client = new Client(uri, API_VERSION);
 
             try {
-                const transaction = transactionBuilder
+                const transaction = Transactions.BuilderFactory
                     .transfer()
-                    .amount(params.price || 0)
+                    .amount(Utils.BigNumber.make(params.price || 0).toFixed())
                     .vendorField(JSON.stringify(params))
                     .recipientId(recipient)
                     .sign(passphrase)
