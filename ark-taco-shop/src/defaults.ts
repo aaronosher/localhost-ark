@@ -11,6 +11,6 @@ export const defaults = {
             process.env.ARK_TACO_SHOP_API_URL ||
             "decide rhythm oyster lady they merry betray jelly coyote solve episode then",
         recipient: process.env.ARK_TACO_SHOP_API_URL || "ANBkoGqWeTSiaEVgVzSKZd3jS7UWzv9PSo",
-        uri: process.env.ARK_TACO_SHOP_API_URL || "http://0.0.0.0:5000",
+        uri: process.env.ARK_TACO_SHOP_API_URL || "http://0.0.0.0:5000/api",
     },
 };

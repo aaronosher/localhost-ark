@@ -4,11 +4,11 @@
 
 Make sure you’ve got a recent version of:
 
--   [Node.js](https://nodejs.org/) - We suggest using [NVM](https://github.com/creationix/nvm) to handle it
--   [Docker and Docker-Compose](https://www.docker.com/) - We use docker to run our database. You can skip it if you have [Postgres](https://www.postgresql.org/) installed locally.
--   [Yarn](https://yarnpkg.com/en/) - Fast, Reliable, and secure dependency management.
--   [Lerna](https://lernajs.io/) - A tool for managing JavaScript projects with multiple packages.
--   [ARK Desktop Wallet](https://github.com/ArkEcosystem/desktop-wallet/releases) - ARK Desktop Wallets to see the transactions
+- [Node.js](https://nodejs.org/) - We suggest using [NVM](https://github.com/creationix/nvm) to handle it
+- [Docker and Docker-Compose](https://www.docker.com/) - We use docker to run our database. You can skip it if you have [Postgres](https://www.postgresql.org/) installed locally.
+- [Yarn](https://yarnpkg.com/en/) - Fast, Reliable, and secure dependency management.
+- [Lerna](https://lernajs.io/) - A tool for managing JavaScript projects with multiple packages.
+- [ARK Desktop Wallet](https://github.com/ArkEcosystem/desktop-wallet/releases) - ARK Desktop Wallets to see the transactions
 
 ## Installation
 
@@ -18,8 +18,8 @@ To begin, create a root folder to contain the ark core and the ark-taco-shop com
 cd ~
 git clone https://github.com/ArkEcosystem/core.git
 cd core
-git fetch https://github.com/arkecosystem/core develop:develop
-git checkout develop
+git fetch https://github.com/arkecosystem/core 2.5.1:2.5.1
+git checkout 2.5.1
 yarn setup
 yarn docker ark
 ```
@@ -53,8 +53,8 @@ git clone https://github.com/MLH/localhost-ark
 
 This repository contains two different plugins:
 
--   _ark-taco-shop-api_ - the server plugin, that provides backend capabilities and integrates with ARK's blockchain
--   _ark-taco-shop_ - the client plugin, that provides frontend capabilities and integrates with _ark-taco-shop-api_
+- _ark-taco-shop-api_ - the server plugin, that provides backend capabilities and integrates with ARK's blockchain
+- _ark-taco-shop_ - the client plugin, that provides frontend capabilities and integrates with _ark-taco-shop-api_
 
 #### The server - Ark Taco Shop Api
 
@@ -155,21 +155,21 @@ We will be using `testnet` as a local network to run ARK. To configure it, modif
         port: process.env.ARK_TACO_SHOP_SERVER_PORT || 3000,
     },
     inventoryApi: {
-        sender: process.env.ARK_TACO_SHOP_API_URL || "AJjv7WztjJNYHrLAeveG5NgHWp6699ZJwD",
+        sender: process.env.ARK_TACO_SHOP_INVENTORY_SENDER_ADDRESS || "AJjv7WztjJNYHrLAeveG5NgHWp6699ZJwD",
         passphrase:
-            process.env.ARK_TACO_SHOP_API_URL ||
+            process.env.ARK_TACO_SHOP_INVENTORY_SENDER_PASSPHRASE ||
             "decide rhythm oyster lady they merry betray jelly coyote solve episode then",
-        recipient: process.env.ARK_TACO_SHOP_API_URL || "ANBkoGqWeTSiaEVgVzSKZd3jS7UWzv9PSo",
-        uri: process.env.ARK_TACO_SHOP_API_URL || "http://0.0.0.0:5000",
+        recipient: process.env.ARK_TACO_SHOP_INVENTORY_RECIPIENT || "ANBkoGqWeTSiaEVgVzSKZd3jS7UWzv9PSo",
+        uri: process.env.ARK_TACO_SHOP_INVENTORY_API_URL || "http://0.0.0.0:5000/api",
     },
 }
 ```
 
 Notes:
 
--   Make sure to change the `inventoryApi.uri` property to set to the IP address of the `server`.
--   Make sure to configure the `inventoryApi.sender` and `inventoryApi.passphrase` properly. You can find valid passphrases in the testnet config file `core/packages/core/bin/config/testnet/delegates.json`. Use [ARK Desktop Wallet](https://github.com/ArkEcosystem/desktop-wallet/releases) to import the passphare and get the wallet's address.
--   To register the client as a node of the ARK network, change the file `core/packages/core/bin/config/testnet/peers.json` and add server's ip to the list.
+- Make sure to change the `inventoryApi.uri` property to set to the IP address of the `server`.
+- Make sure to configure the `inventoryApi.sender` and `inventoryApi.passphrase` properly. You can find valid passphrases in the testnet config file `core/packages/core/bin/config/testnet/delegates.json`. Use [ARK Desktop Wallet](https://github.com/ArkEcosystem/desktop-wallet/releases) to import the passphare and get the wallet's address.
+- To register the client as a node of the ARK network, change the file `core/packages/core/bin/config/testnet/peers.json` and add server's ip to the list.
 
 ##### Install dependencies
 

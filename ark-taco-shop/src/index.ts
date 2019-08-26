@@ -27,6 +27,7 @@ export const plugin = {
             );
         }
 
+        container.resolvePlugin("logger").info("🌮 Starting ark-taco-shop");
         return startServer(options.server, options.inventoryApi);
     },
     async deregister(container: Container.IContainer, options: PluginOptions) {

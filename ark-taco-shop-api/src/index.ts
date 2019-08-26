@@ -10,15 +10,27 @@ export const plugin = {
     pkg: require("../package.json"),
     defaults,
     alias: "ark-taco-shop-api",
+    required: true,
     register: async (container: Container.IContainer, options: PluginOptions) => {
         if (!options.enabled) {
             container.resolvePlugin<Logger.ILogger>("logger").info("🌮 ark-taco-shop-api is disabled");
             return null;
         }
 
+        container.resolvePlugin<Logger.ILogger>("logger").info(`🌮 Starting ark-taco-shop-api db`);
         await database.make();
 
-        return startServer(options.server);
+
+        container.resolvePlugin<Logger.ILogger>("logger").info(`🌮 Starting ark-taco-shop-api http-server`);
+        const coreApiOptions = await container.resolveOptions("api");
+
+        const serverOptions = {
+            ...options.server,
+            coreApi: {
+                ...coreApiOptions
+            }
+        };
+        return startServer(serverOptions, container);
     },
     async deregister(container, options) {
         if (options.server.enabled) {
