@@ -162,6 +162,7 @@ We will be using `testnet` as a local network to run ARK. To configure it, modif
         recipient: process.env.ARK_TACO_SHOP_INVENTORY_RECIPIENT || "ANBkoGqWeTSiaEVgVzSKZd3jS7UWzv9PSo",
         uri: process.env.ARK_TACO_SHOP_INVENTORY_API_URL || "http://0.0.0.0:5000/api",
     },
+  },
 }
 ```
 
