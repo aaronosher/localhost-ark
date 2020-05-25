@@ -36,6 +36,7 @@ export async function startServer(optsServer: ServerOptions, optsClient: TacoApi
         path: "/api/taco/{path*}",
         handler: {
             proxy: {
+                // @ts-ignore
                 protocol: proxyURL.protocol,
                 host: proxyURL.hostname,
                 port: proxyURL.port,
@@ -102,10 +103,12 @@ export async function startServer(optsServer: ServerOptions, optsClient: TacoApi
         },
     });
 
+    // @ts-ignore
     server.route({
         method: "GET",
         path: "/public/{param*}",
         handler: {
+            // @ts-ignore
             directory: {
                 path: path.join(__dirname, "public"),
                 listing: true,

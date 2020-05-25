@@ -40,6 +40,7 @@ export async function startServer(options: ServerOptions, container: Container.I
         ...productsHandler,
     });
 
+    // @ts-ignore
     server.route({
         method: "POST",
         path: "/api/taco/inventory",
@@ -67,10 +68,12 @@ export async function startServer(options: ServerOptions, container: Container.I
         },
     });
 
+    // @ts-ignore
     server.route({
         method: "GET",
         path: "/inventory",
         handler: {
+            // @ts-ignore
             file: {
                 path: path.join(__dirname, "public", "inventory.html"),
                 confine: false,
@@ -78,10 +81,12 @@ export async function startServer(options: ServerOptions, container: Container.I
         },
     });
 
+    // @ts-ignore
     server.route({
         method: "GET",
         path: "/public/{param*}",
         handler: {
+            // @ts-ignore
             directory: {
                 path: path.join(__dirname, "public"),
                 listing: true,
