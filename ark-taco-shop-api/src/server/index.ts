@@ -1,7 +1,6 @@
 "use strict";
 
-import { app } from "@arkecosystem/core-container";
-import { Logger } from "@arkecosystem/core-interfaces";
+import { Container, Logger } from "@arkecosystem/core-interfaces";
 import h2o2 from "@hapi/h2o2";
 import { Server } from "@hapi/hapi";
 import inert from "@hapi/inert";
@@ -9,9 +8,9 @@ import path from "path";
 import { ServerOptions } from "../interfaces";
 import { inventoryHandler } from "./handlers/inventory";
 import { productsHandler } from "./handlers/products";
-import { transactionsHandler } from "./handlers/transactions";
+import { buildTransactionsHandler } from "./handlers/transactions";
 
-export async function startServer(options: ServerOptions): Promise<Server> {
+export async function startServer(options: ServerOptions, container: Container.IContainer): Promise<Server> {
     const baseConfig = {
         host: options.host,
         port: options.port,
@@ -25,8 +24,14 @@ export async function startServer(options: ServerOptions): Promise<Server> {
         },
     };
 
+    // @ts-ignore
+    const coreApiOptions = options.coreApi;
+
+    // @ts-ignore
     const server = new Server(baseConfig);
+    // @ts-ignore
     await server.register(h2o2);
+    // @ts-ignore
     await server.register(inert);
 
     server.route({
@@ -35,6 +40,7 @@ export async function startServer(options: ServerOptions): Promise<Server> {
         ...productsHandler,
     });
 
+    // @ts-ignore
     server.route({
         method: "POST",
         path: "/api/taco/inventory",
@@ -45,7 +51,7 @@ export async function startServer(options: ServerOptions): Promise<Server> {
         method: "POST",
         // transaction's creation needs to be intercepted
         path: "/api/transactions",
-        ...transactionsHandler,
+        ...buildTransactionsHandler(coreApiOptions),
     });
 
     // @ts-ignore
@@ -55,17 +61,19 @@ export async function startServer(options: ServerOptions): Promise<Server> {
         handler: {
             proxy: {
                 protocol: "http",
-                host: app.resolveOptions("api").host,
-                port: app.resolveOptions("api").port,
+                host: coreApiOptions.host,
+                port: coreApiOptions.port,
                 passThrough: true,
             },
         },
     });
 
+    // @ts-ignore
     server.route({
         method: "GET",
         path: "/inventory",
         handler: {
+            // @ts-ignore
             file: {
                 path: path.join(__dirname, "public", "inventory.html"),
                 confine: false,
@@ -73,10 +81,12 @@ export async function startServer(options: ServerOptions): Promise<Server> {
         },
     });
 
+    // @ts-ignore
     server.route({
         method: "GET",
         path: "/public/{param*}",
         handler: {
+            // @ts-ignore
             directory: {
                 path: path.join(__dirname, "public"),
                 listing: true,
@@ -87,7 +97,7 @@ export async function startServer(options: ServerOptions): Promise<Server> {
 
     await server.start();
 
-    app.resolvePlugin<Logger.ILogger>("logger").info(
+    container.resolvePlugin<Logger.ILogger>("logger").info(
         `🌮 ark-taco-shop-api available and listening on ${server.info.uri}`,
     );
 

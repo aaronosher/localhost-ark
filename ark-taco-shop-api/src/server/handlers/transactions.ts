@@ -1,18 +1,16 @@
 "use strict";
 
-import { app } from "@arkecosystem/core-container";
-import { Logger } from "@arkecosystem/core-interfaces";
 import { Request, ResponseToolkit } from "@hapi/hapi";
 import Wreck from "@hapi/wreck";
 import { database } from "../../database";
 import { RequestOptions } from "../../types/wreck";
 
 interface OrderAttributes {
-    productId: number;
+    id: number;
 }
 
-function getCoreApiUri(path: string, search: string): string {
-    const { host, port } = app.resolveOptions("api");
+function getCoreApiUri(coreApiOptions, path: string, search: string): string {
+    const { host, port } = coreApiOptions;
 
     return `http://${host}:${port}${path || ""}${search || ""}`;
 }
@@ -28,10 +26,10 @@ function getProxyOptions(request: Request): RequestOptions {
     return options;
 }
 
-function proxyToTransactionCreation(request: Request): Promise<any> {
+function proxyToTransactionCreation(request: Request, coreApiOptions): Promise<any> {
     // @ts-ignore -- path doesn't seem to be present in the URL type
     const { path = "", search = "" } = request.url;
-    const uri = getCoreApiUri(path, search);
+    const uri = getCoreApiUri(coreApiOptions, path, search);
     const options = getProxyOptions(request);
 
     return Wreck.request(request.method, `${uri}/api/v2/transactions`, options);
@@ -42,12 +40,12 @@ function getOrderFromTransaction(payload: OrderAttributes[] = []): OrderAttribut
     return JSON.parse(payload.transactions[0].vendorField);
 }
 
-/* Intercepts Ark's transactions proxied call to verify if product has balance */
-export const transactionsHandler = {
+export const buildTransactionsHandler = (coreApiOptions) => ({
+    /* Intercepts Ark's transactions proxied call to verify if product has balance */
     async handler(request: Request, h: ResponseToolkit): Promise<object> {
         try {
             const order = getOrderFromTransaction(request.payload as OrderAttributes[]);
-            // @ts-ignore
+
             const product = await database.findById(order.id);
 
             /* If there is not enough balance, we don't create a transaction */
@@ -57,11 +55,12 @@ export const transactionsHandler = {
 
             /* If there is enough balance, we update product's balance and create a transaction */
             await database.update(product.id, { quantity: product.quantity - 1 });
-            const res = await proxyToTransactionCreation(request);
+
+            const res = await proxyToTransactionCreation(request, coreApiOptions);
             return h.response(res).code(res.statusCode);
         } catch (error) {
-            app.resolvePlugin<Logger.ILogger>("logger").error(error.message);
-            return h.response({ error }).code(400);
+            return h.response({ error, message: error.message }).code(400);
         }
     },
-};
+
+});

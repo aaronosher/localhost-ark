@@ -1,18 +1,16 @@
-import Client from "@arkecosystem/client";
+import { Connection } from "@arkecosystem/client";
 import { Transactions, Utils } from "@arkecosystem/crypto";
 import { ProductParams, TacoApiOptions } from "./interfaces";
-
-const API_VERSION = 2;
 
 export function buildTacoApiClient(config: TacoApiOptions) {
     const { sender, passphrase, recipient, uri } = config;
 
     return {
         async listTransactions() {
-            const client = new Client(uri, API_VERSION);
-            const { data: { data: transactions = [] } = {} } = await client
-                .resource("transactions")
-                .all({ recipientId: recipient });
+            const client = new Connection(uri);
+            const {
+                body: { data: transactions = [] } = {}
+            } = await client.api("transactions").all({ recipientId: recipient });
 
             return (transactions || [])
                 .filter(transaction => {
@@ -30,7 +28,7 @@ export function buildTacoApiClient(config: TacoApiOptions) {
                 });
         },
         async postTransaction(params: ProductParams) {
-            const client = new Client(uri, API_VERSION);
+            const client = new Connection(uri);
 
             try {
                 const transaction = Transactions.BuilderFactory
@@ -41,7 +39,7 @@ export function buildTacoApiClient(config: TacoApiOptions) {
                     .sign(passphrase)
                     .getStruct();
 
-                await client.resource("transactions").create({ transactions: [transaction] });
+                await client.api("transactions").create({ transactions: [transaction] });
 
                 return transaction;
             } catch (error) {

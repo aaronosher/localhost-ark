@@ -1,4 +1,5 @@
 import { createServer, mountServer } from "@arkecosystem/core-http-utils";
+import { Container } from "@arkecosystem/core-interfaces";
 import h2o2 from "@hapi/h2o2";
 import inert from "@hapi/inert";
 import Joi from "@hapi/joi";
@@ -12,8 +13,11 @@ import { ProductParams, ServerOptions, TacoApiOptions } from "../interfaces";
 export async function startServer(optsServer: ServerOptions, optsClient: TacoApiOptions) {
     const server = await createServer({ host: optsServer.host, port: optsServer.port });
 
+    // @ts-ignore
     await server.register(h2o2);
+    // @ts-ignore
     await server.register(Vision);
+    // @ts-ignore
     await server.register(inert);
 
     // @ts-ignore
@@ -32,6 +36,7 @@ export async function startServer(optsServer: ServerOptions, optsClient: TacoApi
         path: "/api/taco/{path*}",
         handler: {
             proxy: {
+                // @ts-ignore
                 protocol: proxyURL.protocol,
                 host: proxyURL.hostname,
                 port: proxyURL.port,
@@ -98,10 +103,12 @@ export async function startServer(optsServer: ServerOptions, optsClient: TacoApi
         },
     });
 
+    // @ts-ignore
     server.route({
         method: "GET",
         path: "/public/{param*}",
         handler: {
+            // @ts-ignore
             directory: {
                 path: path.join(__dirname, "public"),
                 listing: true,
