@@ -22,10 +22,10 @@
         "format": "tslint -c ./tslint.json 'src/**/*.ts' --fix && prettier --write \"./*.{ts,js,json,md}\" \"./src/**/*.{ts,js,json,md}\""
     },
     "dependencies": {
-        "@arkecosystem/client": "^1.0.1",
-        "@arkecosystem/core-container": "^2.5.1",
-        "@arkecosystem/core-interfaces": "^2.5.1",
-        "@arkecosystem/crypto": "^2.5.19",
+        "@arkecosystem/client": "^2.0.0",
+        "@arkecosystem/core-container": "^2.7.25",
+        "@arkecosystem/core-interfaces": "^2.7.25",
+        "@arkecosystem/crypto": "^2.7.25",
         "@hapi/h2o2": "^8.3.0",
         "@hapi/hapi": "^18.3.1",
         "@hapi/joi": "^15.0.1",
